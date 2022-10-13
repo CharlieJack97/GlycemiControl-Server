@@ -4,9 +4,9 @@ const mongoose = require("mongoose")
 
 
 router.post('/tracing', (req, res) => {
-  const { title, description, time } = req.body;
+  const { glycemic, symptom, cause, time } = req.body;
  
-  Control.create({ title, description, time, test: [] })
+  Control.create({ glycemic, symptom, cause, time })
     .then(response => res.json(response))
     .catch(err => res.json(err));
 });
@@ -53,6 +53,14 @@ router.get('/tracing/:id', (req, res, next) => {
     Control.findByIdAndRemove(id)
       .then(() => res.json({ message: `Tracing with ${id} is removed successfully.` }))
       .catch(error => res.json(error));
+  });
+
+  router.get('/tracing', (req,  res, next) => {
+    
+    const {glycemic, symptom}= req.params
+    Control.find({glycemic,symptom})
+      .then(allTracing => res.json(allTracing))
+      .catch(err => res.json(err));
   });
  
 module.exports = router;
